@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2425 KSTIA 수능</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+      }
+      #begin-page,
+      #quiz-container,
+      #result {
+        width: 100%;
+        max-width: 800px;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      #begin-page img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      #begin-page h1 {
+        font-size: 24px;
+        margin: 10px 0;
+        text-align: center;
+      }
+      #begin-page p {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+      #begin-page button {
+        padding: 10px 20px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+        max-width: 300px;
+      }
+      #begin-page button:hover {
+        background-color: #0056b3;
+      }
+      #quiz-container {
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      #question-image {
+        display: block;
+        width: 100%;
+        margin: 10px auto;
+        max-width: 400px;
+        border-radius: 8px;
+      }
+      #question-gif {
+        max-width: 150px;
+        height: auto;
+        margin-left: 20px;
+        border-radius: 8px;
+        display: block;
+      }
+      #options button {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+      }
+      .selected {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      #result img {
+        max-width: 100%;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      #result a {
+        font-size: 18px;
+        color: #007bff;
+        text-decoration: none;
+        display: block;
+        margin: 10px 0;
+        text-align: center;
+      }
+      #result a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 768px) {
+        #begin-page h1 {
+          font-size: 20px;
+        }
+
+        #begin-page p {
+          font-size: 14px;
+        }
+
+        #begin-page button {
+          font-size: 16px;
+          padding: 10px 15px;
+        }
+
+        #quiz-container {
+          padding: 10px;
+        }
+
+        #options button {
+          font-size: 14px;
+          padding: 8px;
+        }
+
+        #result h2 {
+          font-size: 18px;
+        }
+
+        #result a {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 시작화면 -->
+    <div id="begin-page" style="text-align: center">
+      <img
+        id="begin-image"
+        src="./images/start_page1.png"
+        alt="Begin Image"
+        style="display: block"
+      />
+      <img
+        id="begin-image"
+        src="./images/start_page2.png"
+        alt="Begin Image"
+        style="display: block"
+      />
+      <h1>
+        2025학년도 대학수학능력시험 8.8교시 관광스키영역에 오신 것을 환영합니다!
+      </h1>
+      <p>안내 사항을 잘 읽은 후 시험을 시작하세요.</p>
+      <p>-다음 문제 버튼을 누르면 이전 문제로 돌아올 수 없습니다.</p>
+      <p>-시험 시간은 제한이 없습니다.</p>
+      <button onclick="startQuiz()">시작하기</button>
+    </div>
+    <!-- 문항지 화면 -->
+    <div id="quiz-container" style="display: none">
+      <div id="question-number"></div>
+      <div id="question"></div>
+      <img
+        id="question-image"
+        src=""
+        alt="Question Image"
+        style="display: none"
+      />
+      <img id="question-gif" src="" alt="Question GIF" style="display: none" />
+      <div id="options"></div>
+      <audio id="audio-player" controls style="display: none"></audio>
+      <div
+        id="selected-answer"
+        style="margin-top: 10px; font-weight: bold"
+      ></div>
+      <button onclick="nextQuestion()">다음 문제</button>
+    </div>
+    <!-- 결과화면 -->
+    <div id="result" style="display: none; text-align: center">
+      <img
+        id="result-image"
+        src="./images/result_code.png"
+        alt="Result Image"
+        style="max-width: 600px; margin-bottom: 20px"
+      />
+      <h2>점수: <span id="score"></span>/100</h2>
+      <p>이 화면을 캡쳐하세요!</p>
+      <a
+        id="result-link"
+        href="https://forms.gle/7dP5sNs25Xkk2xqP8"
+        target="_blank"
+        style="
+          display: block;
+          margin-top: 10px;
+          font-size: 16px;
+          color: #007bff;
+          text-decoration: none;
+        "
+        >자격증 신청 폼
+      </a>
+    </div>
+    <!-- 문항 -->
+    <script>
+      const questions = [
+        {
+          question: '1. 대한관광스키지도자연맹(KSTIA)의 창단년도를 고르시오.',
+          options: [
+            '1번: 2019',
+            '2번: 2020',
+            '3번: 2021',
+            '4번: 2022',
+            '5번: 2023',
+          ],
+          answer: 3,
+          image: './images/prob1.png',
+          gif: './images/cat_ad4.gif',
+        },
+        {
+          question: '2. 대한관광스키지도자연맹이 개최한 행사가 아닌 것은?',
+          options: [
+            '1번: 대한관광스키지도자연맹 회장배 관광기술선수권 대회',
+            '2번: 대한관광스키지도자연맹 x 스키갤러리 관광기선전',
+            '3번: 대한관광스키지도자연맹 회장배 영상 관광기선전',
+            '4번: KSTIA 레벨4 검정회',
+            '5번: KSTIA 레벨8 검정회',
+          ],
+          answer: 4,
+          image: './images/prob2.png',
+          gif: './images/logo_bigsmall5.gif',
+        },
+        {
+          question: '3. 대한관광스키지도자연맹이 출시한 굿즈가 아닌 것은?',
+          options: [
+            '1번: KSTIA 스티커 6종 세트',
+            '2번: KSTIA 공식 캐리어 태그',
+            '3번: KSTIA 공식 알파인 스키',
+            '4번: KSTIA 공식 키링 - 관죽이와 관냥이',
+            '5번: KSTIA 한정판 후드집업',
+          ],
+          answer: 2,
+          image: './images/prob3.png',
+          gif: './images/cat_horror3.gif',
+        },
+        {
+          question: '4. 관광데몬이 현재 사용 중인 스키 플레이트 브랜드는?',
+          options: [
+            '1번: 피셔',
+            '2번: 아토믹',
+            '3번: 헤드',
+            '4번: 스토클리',
+            '5번: 살로몬',
+          ],
+          answer: 2,
+          image: './images/prob4.png',
+          gif: './images/cat_horror3.gif',
+        },
+        {
+          question:
+            '5. 다음 중 24/25시즌 X5 시즌권에 포함되지 않은 스키 리조트는?',
+          options: [
+            '1번: 하이원 리조트',
+            '2번: 오투 리조트',
+            '3번: 용평 리조트',
+            '4번: 휘닉스 파크',
+            '5번: 강촌 엘리시안',
+          ],
+          answer: 3,
+          image: './images/prob5.png',
+          gif: './images/cat_ad4.gif',
+        },
+        {
+          question: '6. 대한관광스키지도자연맹의 최고 가치를 고르시오.',
+          options: [
+            '1번: 안전스키',
+            '2번: 비밀스키',
+            '3번: 평등스키',
+            '4번: 직접스키',
+            '5번: 보통스키',
+          ],
+          answer: 0,
+          image: './images/prob6.png',
+          gif: './images/dog_rotate1.gif',
+        },
+        {
+          question: '7. 보기를 보고 알맞은 답을 고르시오.',
+          options: [
+            '1번: ㄱ',
+            '2번: ㄷ',
+            '3번: ㄱ, ㄷ',
+            '4번: ㄴ, ㄷ',
+            '5번: ㄱ, ㄴ, ㄷ',
+          ],
+          answer: 1,
+          image: './images/prob7.png',
+          gif: './images/dog_rotate2.gif',
+        },
+        {
+          question:
+            '8. 다음 4명의 스키어 중 관광레벨 4 검정과목인 터틀턴에 대해 잘못 설명한 사람을 고르시오.',
+          options: [
+            '1번: 영철',
+            '2번: 희진',
+            '3번: 관죽',
+            '4번: 데몬',
+            '5번: 모두 맞는 설명이다.',
+          ],
+          answer: 1,
+          image: './images/prob8.png',
+          gif: './images/dog_rotate2.gif',
+        },
+        {
+          question:
+            '9. 다음 3명의 스키어 중 관광레벨 5 검정과목인 익스트림 숏턴에 대해 옳게 말한 사람을 모두 고르시오.',
+          options: [
+            '1번: 희정',
+            '2번: 아영',
+            '3번: 희정, 아영',
+            '4번: 희정, 두팔',
+            '5번: 희정, 두팔, 아영',
+          ],
+          answer: 3,
+          image: './images/prob9.png',
+          gif: './images/cat_ad4.gif',
+        },
+        {
+          question:
+            '10. 보기에서 관광데몬에 대한 설명으로 옳은 것을 모두 고르시오.',
+          options: [
+            '1번: ㄱ',
+            '2번: ㄷ',
+            '3번: ㄱ, ㄴ',
+            '4번: ㄴ, ㄷ',
+            '5번: ㄱ, ㄴ, ㄷ',
+          ],
+          answer: 2,
+          image: './images/prob10.png',
+          gif: './images/cat_horror3.gif',
+        },
+        {
+          question:
+            '11. 다음 중 KSIA 레벨 1 스노우플라우 턴과, 관광 레벨 4 터틀턴의 공통점을 모두 고르시오.',
+          options: [
+            '1번: ㄱ',
+            '2번: ㄷ',
+            '3번: ㄱ, ㄴ',
+            '4번: ㄴ, ㄷ',
+            '5번: ㄱ, ㄴ, ㄷ',
+          ],
+          answer: 4,
+          image: './images/prob11.png',
+          gif: './images/logo_bigsmall5.gif',
+        },
+        {
+          question: '12. 대한관광스키지도자연맹의 가입조건을 고르시오.',
+          options: [
+            '1번: 레벨이 도합 10레벨 이상이어야 한다.',
+            '2번: 관광스키 릴스를 100개 이상 올려야 한다.',
+            '3번: 메이플스토리 데몬 캐릭터로 3차 전직을 해야 한다.',
+            '4번: 경험치 2배 이벤트를 통해 스키 레벨을 올려야 한다.',
+            '5번: 관광스키를 사랑하는 누구나 연맹의 일원이 될 수 있다.',
+          ],
+          answer: 4,
+          image: './images/prob12.png',
+          gif: './images/logo_bigsmall5.gif',
+        },
+        {
+          question: '13. KSTIA 데몬이 가장 많이 출현하는 슬로프는?',
+          options: [
+            '1번: 용평 레드',
+            '2번: 용평 골드',
+            '3번: 휘닉스 스패로우',
+            '4번: 휘닉스 파라다이스',
+            '5번: 비발디 재즈',
+          ],
+          answer: 1,
+          image: './images/prob13.png',
+          gif: './images/dog_rotate2.gif',
+        },
+        {
+          question: '14. KSTIA가 창단된 슬로프는?',
+          options: [
+            '1번: 엘리시안 드래곤',
+            '2번: 비발디 클래식',
+            '3번: 용평 레인보우 파라다이스',
+            '4번: 휘닉스 파노라마',
+            '5번: 하이원 제우스',
+          ],
+          answer: 2,
+          image: './images/prob14.png',
+          gif: './images/cat_horror3.gif',
+        },
+        {
+          question: '15. 보기를 보고 카빙스키의 특징으로 알맞은 것을 고르시오.',
+          options: [
+            '1번: ㄱ',
+            '2번: ㄷ',
+            '3번: ㄱ, ㄷ',
+            '4번: ㄴ, ㄷ',
+            '5번: ㄱ, ㄴ, ㄷ',
+          ],
+          answer: 0,
+          image: './images/prob15.png',
+          gif: './images/dog_rotate1.gif',
+        },
+        {
+          question: '16. 화자음성을 듣고 현재 슬로프의 설질을 고르시오.',
+          options: [
+            '1번: 매우 좋지 않다.',
+            '2번: 그냥 탈 만 하다.',
+            '3번: 보통이다.',
+            '4번: 스키가 잘 타지는 정도다.',
+            '5번: 정설 직후 땡스키다.',
+          ],
+          answer: 0,
+          image: './images/prob16.png',
+          gif: './images/dog_rotate1.gif',
+          audio: './audio/prob16.flac',
+        },
+        {
+          question: '17. 다음 대화를 듣고 현재 스키장의 날씨를 고르시오.',
+          options: [
+            '1번: 매우 맑음.',
+            '2번: 구름이 많음.',
+            '3번: 안개가 짙음.',
+            '4번: 폭설.',
+            '5번: 비가 내리기 시작함.',
+          ],
+          answer: 4,
+          image: './images/prob17.png',
+          gif: './images/logo_bigsmall5.gif',
+          audio: './audio/prob17.flac',
+        },
+        {
+          question: '18. 다음 대화를 듣고 두 사람이 연습 중인 기술을 고르시오.',
+          options: [
+            '1번: 미사일 크라우칭',
+            '2번: 스노우 플라우 턴',
+            '3번: 카빙 롱턴',
+            '4번: 익스트림 숏턴',
+            '5번: 베이직 숏턴',
+          ],
+          answer: 3,
+          image: './images/prob18.png',
+          gif: './images/cat_ad4.gif',
+          audio: './audio/prob18.flac',
+        },
+        {
+          question: '19. 다음 대화를 듣고 "철수"의 할아버지의 직업을 고르시오.',
+          options: [
+            '1번: 스키 선수',
+            '2번: 관광데몬',
+            '3번: 소방관',
+            '4번: 교사',
+            '5번: 가정주부',
+          ],
+          answer: 0,
+          image: './images/prob19.png',
+          gif: './images/dog_rotate1.gif',
+          audio: './audio/prob19.flac',
+        },
+        {
+          question:
+            '20. 다음 대화를 듣고 "영희"가 스키에 입문한 이유를 고르시오.',
+          options: [
+            '1번: 관광데몬의 스킹에 감동을 받아서.',
+            '2번: 카빙 턴이 타고 싶어서.',
+            '3번: 친구들과 리조트에 놀러가고 싶어서.',
+            '4번: 학창시절 스키캠프가 재밌어서.',
+            '5번: KSTIA의 관광스키 기선전에 참가하고 싶어서.',
+          ],
+          answer: 3,
+          image: './images/prob20.png',
+          gif: './images/cat_ad4.gif',
+          audio: './audio/prob20.flac',
+        },
+        // Problem from 1 to 20
+      ];
+
+      function startQuiz() {
+        document.getElementById('begin-page').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        loadQuestion();
+      }
+
+      let currentQuestion = 0;
+      let score = 0;
+      // 문제 불러오기 함수
+      function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById('question').innerText = q.question;
+        document.getElementById('options').innerHTML = q.options
+          .map(
+            (option, index) =>
+              `<button onclick="selectAnswer(${index}, this)">${option}</button>`
+          )
+          .join('');
+
+        // 이미지 표시
+        if (q.image) {
+          document.getElementById('question-image').src = q.image;
+          document.getElementById('question-image').style.display = 'block';
+        } else {
+          document.getElementById('question-image').style.display = 'none';
+        }
+
+        if (q.gif) {
+          document.getElementById('question-gif').src = q.gif;
+          document.getElementById('question-gif').style.display = 'block';
+        } else {
+          document.getElementById('question-gif').style.display = 'none';
+        }
+
+        // 오디오 재생
+        if (q.audio) {
+          document.getElementById('audio-player').src = q.audio;
+          document.getElementById('audio-player').style.display = 'block';
+        } else {
+          document.getElementById('audio-player').style.display = 'none';
+        }
+
+        // 선택한 답변 초기화
+        document.getElementById('selected-answer').innerText = '';
+      }
+
+      function selectAnswer(selected, buttonElement) {
+        // 모든 버튼의 강조 표시 제거
+        Array.from(document.getElementById('options').children).forEach(
+          (button) => button.classList.remove('selected')
+        );
+        // 선택한 버튼에 강조 표시 추가
+        buttonElement.classList.add('selected');
+
+        // 선택한 답변 표시
+        const selectedOption = questions[currentQuestion].options[selected];
+        document.getElementById(
+          'selected-answer'
+        ).innerText = `선택한 답변: ${selectedOption}`;
+
+        // 선택한 답변 저장
+        questions[currentQuestion].selectedAnswer = selected;
+      }
+
+      function nextQuestion() {
+        const q = questions[currentQuestion];
+        // 점수 합산
+        if (q.selectedAnswer === q.answer) {
+          score += 5;
+        }
+        // 다음 질문으로 이동
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+          loadQuestion();
+        } else {
+          showResult();
+        }
+      }
+      // 결과화면 출력 함수
+      function showResult() {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('score').innerText = score;
+      }
+      // 다음 문항 불러오기
+      loadQuestion();
+    </script>
+  </body>
+</html>
