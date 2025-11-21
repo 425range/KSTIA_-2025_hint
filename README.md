@@ -1,4 +1,4 @@
-# KSTIA_2025학년도 대학수학능력시험 관광스키 영역
+# KSTIA_2025학년도 대학수학능력시험 관광스키 영역 (KSTIA 2025 SAT test - Ski)
 대한관광스키지도자연맹 (KSTIA) 2025년 이벤트 페이지 - 힌트버전!
 
 수능 시험 문제 유형으로 재미있는 스키 문제 풀기!
@@ -6,3 +6,12 @@
 문항 아래에 귀여운 KSTIA 캐릭터 GIF 파일이 정답을 친절하게 알려드립니다!
 
 점수를 제출하면 자격증에 작성해드립니다.
+
+----
+Korea Ski Tourism Instructors Association (KSTIA) 2025 event page ver. hint
+
+Solve fun ski problems that is like SAT type!
+
+Cute KSTIA character's GIF file would let you know an answer of each problems kindly!
+
+We'll write down your score & information on lisence card after you submit information.
